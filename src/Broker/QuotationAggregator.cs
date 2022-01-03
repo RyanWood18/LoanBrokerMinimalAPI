@@ -10,9 +10,13 @@ public class QuotationAggregator : IHostedService
     private readonly ServiceBusProcessor _sbProcessor;
     private readonly TableClient _quotationsClient;
     private readonly TableClient _requestsClient;
+    private readonly QuotationNotifier _quotationNotifier;
+    private readonly ILogger<QuotationAggregator> _logger;
 
-    public QuotationAggregator(ServiceBusClient sbClient, IOptions<ServiceBusConfiguration> sbOptions, TableServiceClient tableServiceClient)
+    public QuotationAggregator(ServiceBusClient sbClient, IOptions<ServiceBusConfiguration> sbOptions, TableServiceClient tableServiceClient, QuotationNotifier quotationNotifier, ILogger<QuotationAggregator> logger)
     {
+        _quotationNotifier = quotationNotifier;
+        _logger = logger;
         _quotationsClient = tableServiceClient.GetTableClient("Quotations");
         _requestsClient = tableServiceClient.GetTableClient("LoanRequests");
         var sbConfig = sbOptions.Value;
@@ -29,7 +33,8 @@ public class QuotationAggregator : IHostedService
 
     private Task ErrorHandler(ProcessErrorEventArgs arg)
     {
-        throw new NotImplementedException();
+        _logger.LogError(arg.Exception, "An error occurred while trying to read from the quotation queue");
+        return Task.CompletedTask;
     }
 
     private async Task MessageHandler(ProcessMessageEventArgs arg)
@@ -52,6 +57,7 @@ public class QuotationAggregator : IHostedService
                 EmailAddress = loanRequest.NotificationEmail,
                 Quotes = quotations.Select(x => new Quotation {BankId = x.RowKey, Rate = x.Rate}).ToList()
             };
+            await _quotationNotifier.Notify(completedQuotation);
         }
 
     }
