@@ -1,3 +1,4 @@
+using Broker.Model;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 

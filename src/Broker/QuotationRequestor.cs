@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Azure.Data.Tables;
 using Azure.Messaging.ServiceBus;
+using Broker.Model;
 using Microsoft.Extensions.Options;
 
 namespace Broker;
@@ -46,6 +47,6 @@ public class QuotationRequester
         var request = await _httpClient.GetAsync(requestUri);
 
         var score = JsonSerializer.Deserialize<CreditScore>(await request.Content.ReadAsStringAsync(), new JsonSerializerOptions{PropertyNameCaseInsensitive = true});
-        return score;
+        return score!;
     }
 }

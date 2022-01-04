@@ -1,4 +1,4 @@
-namespace Broker;
+namespace Broker.Model;
 
 public class CreditScore
 {

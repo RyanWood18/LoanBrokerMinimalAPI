@@ -1,6 +1,7 @@
 using Azure;
 using Azure.Data.Tables;
 using Azure.Messaging.ServiceBus;
+using Broker.Model;
 using Microsoft.Extensions.Options;
 
 namespace Broker;

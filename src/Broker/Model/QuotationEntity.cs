@@ -1,7 +1,7 @@
 using Azure;
 using Azure.Data.Tables;
 
-namespace Broker;
+namespace Broker.Model;
 
 public class QuotationEntity : ITableEntity
 {
@@ -14,8 +14,8 @@ public class QuotationEntity : ITableEntity
     }
     
     public double Rate { get; }
-    public string PartitionKey { get; set; }
-    public string RowKey { get; set; }
+    public string PartitionKey { get; set; } = null!;
+    public string RowKey { get; set; } = null!;
     public DateTimeOffset? Timestamp { get; set; }
     public ETag ETag { get; set; }
 }
