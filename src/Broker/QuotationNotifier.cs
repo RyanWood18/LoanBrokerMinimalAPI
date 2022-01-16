@@ -6,10 +6,10 @@ namespace Broker;
 
 public class QuotationNotifier
 {
-    private readonly SendGridClient _emailClient;
+    private readonly ISendGridClient _emailClient;
     private readonly IConfiguration _config;
 
-    public QuotationNotifier(SendGridClient emailClient, IConfiguration config)
+    public QuotationNotifier(ISendGridClient emailClient, IConfiguration config)
     {
         _emailClient = emailClient;
         _config = config;

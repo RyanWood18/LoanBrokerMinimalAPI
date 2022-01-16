@@ -13,12 +13,12 @@ public class QuotationRequestProcessor : IHostedService
     private readonly QuotationProvider _quotationProvider;
     private readonly string _bankId;
 
-    public QuotationRequestProcessor(ILogger<QuotationRequestProcessor> logger, IOptions<ServiceBusConfiguration> sbOptions, QuotationProvider quotationProvider, IOptions<BankConfiguration> bankOptions)
+    public QuotationRequestProcessor(ILogger<QuotationRequestProcessor> logger, IOptions<ServiceBusConfiguration> sbOptions, QuotationProvider quotationProvider, IOptions<BankConfiguration> bankOptions, ServiceBusClient client)
     {
         _logger = logger;
         _quotationProvider = quotationProvider;
+        _client = client;
         var config = sbOptions.Value;
-        _client = new ServiceBusClient(config.ConnectionString);
         _serviceBussProcessor = _client.CreateProcessor(config.Topic, config.Subscription);
         _sender = _client.CreateSender(config.Queue);
         _bankId = bankOptions.Value.BankId;

@@ -6,6 +6,9 @@ using Microsoft.Extensions.Options;
 using SendGrid.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddSendGrid((s, o) =>
 {
     var config = s.GetService<IConfiguration>();
@@ -24,8 +27,15 @@ builder.Services.AddSingleton(sp => new TableServiceClient(sp.GetService<IConfig
 builder.Services.AddHostedService<QuotationAggregator>();
 builder.Services.AddScoped<QuotationRequester>();
 builder.Services.AddHostedService<IncompleteRequestCleaner>();
+builder.Services.AddSingleton<QuotationNotifier>();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapPost("/RequestQuotations/", async (LoanRequest request, QuotationRequester requester) =>
 {

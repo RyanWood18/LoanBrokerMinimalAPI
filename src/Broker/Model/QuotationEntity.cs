@@ -13,7 +13,7 @@ public class QuotationEntity : ITableEntity
         RowKey = rowKey;
     }
     
-    public double Rate { get; }
+    public double Rate { get; set; }
     public string PartitionKey { get; set; } = null!;
     public string RowKey { get; set; } = null!;
     public DateTimeOffset? Timestamp { get; set; }

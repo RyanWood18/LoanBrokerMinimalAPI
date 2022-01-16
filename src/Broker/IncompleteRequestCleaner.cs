@@ -26,8 +26,8 @@ public class IncompleteRequestCleaner : BackgroundService
 
             foreach (var request in loanRequest)
             {
-                Pageable<QuotationEntity> quotations =
-                    _quotationClient.Query<QuotationEntity>(x => x.PartitionKey == request.RowKey);
+                var quotations =
+                    _quotationClient.Query<QuotationEntity>(x => x.PartitionKey == request.RowKey).ToList();
                 
                 var completedQuotation = new CompletedRequest
                 {
