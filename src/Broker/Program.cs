@@ -4,8 +4,12 @@ using Broker;
 using Broker.Model;
 using Microsoft.Extensions.Options;
 using SendGrid.Extensions.DependencyInjection;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVaultUri"]), new DefaultAzureCredential());
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
